@@ -1,2 +1,1 @@
-# nestjs_todo_application
-full-stack todo app
+# *`nestjs_todo_application`*
