@@ -6,7 +6,7 @@ async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
 	
 	const config = new DocumentBuilder()
-	.setTitle("The Metall Todo API")
+	.setTitle("The Semi-Metall Todo API")
 	.setDescription("an API with authentication in order to proper CRUDing")
 	.setVersion("1.001")
 	.build();
