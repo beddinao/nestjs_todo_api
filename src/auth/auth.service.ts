@@ -49,8 +49,8 @@ export class AuthService {
 		}
 		catch (error) {
 			if (error.code === 'P2002')
-				throw new UnauthorizedException('email already exists');
-			throw error;
+				throw new UnauthorizedException("email or username already exits");
+			throw new UnauthorizedException("can't register user, code: " + error.code);
 		}
 	}
 }

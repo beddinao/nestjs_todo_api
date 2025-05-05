@@ -10,7 +10,7 @@ export class AuthController {
 		console.log("\nauth-controller: login");
 
 		if (body == undefined)
-			throw new BadRequestException("fuck off");
+			throw new BadRequestException("invalid request body");
 
 		if (!body.email)
 			throw new BadRequestException("email is Required");
