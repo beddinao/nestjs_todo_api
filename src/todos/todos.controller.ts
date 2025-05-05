@@ -19,16 +19,19 @@ export class TodosController {
 
 	@Post()
 	createTodo(@Body() body: { title: string }, @Request() req) {
+		console.log("TodosController Post Create", body);
 		return this.todosService.create_todo(body.title, req.user.userId);
 	}
 
 	@Get()
 	getTodos(@Request() req) {
+		console.log("TodosController Get");
 		return this.todosService.get_todos(req.user.userId);
 	}
 
 	@Get(':id')
 	getTodo(@Param('id') id: string, @Request() req) {
+		console.log("TodosController Get id", id);
 		return this.todosService.get_todo(id, req.user.userId);
 	}
 
@@ -37,6 +40,7 @@ export class TodosController {
 		@Body() body: { title?: string; done?: boolean },
 		@Request() req)
 	{
+			console.log("TodosController Put update", id, body);
 			return this.todosService.update_todo(
 				id,
 				body.title,
@@ -47,6 +51,7 @@ export class TodosController {
 
 	@Delete(':id')
 	deleteTodo(@Param('id') id: string, @Request() req) {
+		console.log("TodosController delete id", id);
 		return this.todosService.delete_todo(id, req.user.userId);
 	}
 
