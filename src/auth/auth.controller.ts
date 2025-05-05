@@ -7,8 +7,14 @@ export class AuthController {
 
 	@Post('login')
 	async login(@Body() body: { email: string; password: string }) {
+		console.log("\nAUTH LOGIN");
+
+		if (body == undefined)
+			throw new BadRequestException("fuck off");
+
 		if (!body.email)
 			throw new BadRequestException("email is Required");
+
 		if (!body.password)
 			throw new BadRequestException("password is required");
 
@@ -17,13 +23,17 @@ export class AuthController {
 	}
 
 	@Post('register')
-	async register(@Body() body: { email: string; password: string}) {
-		console.log("AUTH REGISTER");
-		if (!body)
+	register(@Body() body: { email: string; password: string }) {
+		console.log("\nAUTH REGISTER:");
+
+		console.log(body);
+
+		if (body == undefined) 
 			throw new BadRequestException("fuck off");
-		console.log("request: ", body);
+
 		if (!body.email)
 			throw new BadRequestException("email is Required");
+
 		if (!body.password)
 			throw new BadRequestException("password is required");
 		
