@@ -11,27 +11,43 @@ export class AuthService {
 	) {}
 
 	async validate_user(email: string, password: string) {
-		const user = await this.prisma.user.findUnique({ where: { email } });
-		if (user && await bcrypt.compare(password, user.password)) {
-			const { password, ...result } = user;
-			return result;
+		try {
+			const user = await this.prisma.user.findUnique({ where: { email } });
+			if (user && await bcrypt.compare(password, user.password)) {
+				const { password, ...result } = user;
+				return result;
+			}
+			return null;
 		}
-		return null;
+		catch (error) {
+			return null;
+		}
 	}
 
 	async login(email: string, password: string) {
-		console.log("auth-service: login");
 		const user = await this.validate_user(email, password);
 		if (!user)
 			throw new UnauthorizedException('invalid credientials');
 		const payload = { email: user.email, sub: user.id };
 		return {
-			access_token: this.jwtService.sign(payload),
+			access_token: this.jwtService.sign(payload, { expiresIn: '15m' }),
+			refresh_token: this.jwtService.sign(payload, { expiresIn: '1d' }),
 		};
 	}
 
+	async refresh_token(refresh_token: string) {
+		try {
+			const payload =  this.jwtService.verify(refresh_token);
+			return {
+				access_token: this.jwtService.sign({ email: payload.email, sub: payload.sub }),
+			};
+		}
+		catch (error) {
+			throw new UnauthorizedException("invalid refresh token");
+		}
+	}
+
 	async register(email: string, password: string, username: string) {
-		console.log("auth-service: register");
 
 		const hashed_password = await bcrypt.hash(password, 10);
 

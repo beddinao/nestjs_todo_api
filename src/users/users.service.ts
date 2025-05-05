@@ -6,12 +6,10 @@ export class UsersService {
 	constructor(private prisma: PrismaService) {}
 
 	async get_users() {
-		console.log("users-service: get_users");
 		return this.prisma.user.findMany();
 	}
 
 	async get_user(id: number) {
-		console.log("users-service: get_user");
 
 		if (id == undefined)
 			throw new BadRequestException("invalid request");
@@ -25,8 +23,6 @@ export class UsersService {
 	}
 
 	async update_user(id: number, username: string|undefined, password: string|undefined, email: string|undefined) {
-
-		console.log("users-service: update_user:");
 
 		if (id == undefined)
 			throw new BadRequestException('invalid request');
@@ -54,7 +50,6 @@ export class UsersService {
 
 
 	async delete_user(id: number) {
-		console.log("users-service: delete_user: id: ", id);
 		if (!id) 
 			throw new BadRequestException("invalid request");
 
