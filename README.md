@@ -7,6 +7,12 @@
 
 Simple **NestJS API** for todos. Uses **PostgreSQL**, **JWT auth**.
 
+## swagger ui
+
+```
+/api
+```
+
 ## setup
 
 - install dependencies:
