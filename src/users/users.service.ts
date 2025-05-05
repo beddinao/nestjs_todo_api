@@ -5,6 +5,25 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class UsersService {
 	constructor(private prisma: PrismaService) {}
 
+	async get_users() {
+		console.log("users-service: get_users");
+		return this.prisma.user.findMany();
+	}
+
+	async get_user(id: number) {
+		console.log("users-service: get_user");
+
+		if (id == undefined)
+			throw new BadRequestException("invalid request");
+
+		const user = this.prisma.user.findFirst({ where: { id } });
+
+		if (!user)
+			throw new NotFoundException("user with id ["+id+"] not found");
+
+		return user;
+	}
+
 	async update_user(id: number, username: string|undefined, password: string|undefined, email: string|undefined) {
 
 		console.log("users-service: update_user:");

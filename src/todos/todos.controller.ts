@@ -17,16 +17,16 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 export class TodosController {
 	constructor(private todosService: TodosService) {}
 
-	@Post()
-	createTodo(@Body() body: { title: string }, @Request() req) {
-		console.log("todos-controller: post: createTodo: ", body);
-		return this.todosService.create_todo(body.title, req.user.userId);
-	}
-
 	@Get()
 	getTodos(@Request() req) {
 		console.log("todos-controller: get: getTodos");
 		return this.todosService.get_todos(req.user.userId);
+	}
+
+	@Post()
+	createTodo(@Body() body: { title: string }, @Request() req) {
+		console.log("todos-controller: post: createTodo: ", body);
+		return this.todosService.create_todo(body.title, req.user.userId);
 	}
 
 	@Get(':id')
