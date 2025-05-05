@@ -39,20 +39,19 @@ export class TodosController {
 	updateTodo(@Param('id') id: string,
 		 @Body() body: { title?: string; done?: boolean },
 		 @Request() req)
-		 {
-			 console.log("todos-controller: put(id): updateTodo: ", id, body);
-			 return this.todosService.update_todo(
-				 id,
-				 body.title,
-				 body.done,
-				 req.user.userId,
-			 );
-		 }
+	{
+		console.log("todos-controller: put(id): updateTodo: ", id, body);
+		return this.todosService.update_todo(
+			id,
+			body.title,
+			body.done,
+			req.user.userId,
+		);
+	}
 
-		 @Delete(':id')
-		 deleteTodo(@Param('id') id: string, @Request() req) {
-			 console.log("todos-controller: delete(id): deleteTodo: ", id);
-			 return this.todosService.delete_todo(id, req.user.userId);
-		 }
-
+	@Delete(':id')
+	deleteTodo(@Param('id') id: string, @Request() req) {
+		console.log("todos-controller: delete(id): deleteTodo: ", id);
+		return this.todosService.delete_todo(id, req.user.userId);
+	}
 }
