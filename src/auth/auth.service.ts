@@ -30,7 +30,7 @@ export class AuthService {
 		};
 	}
 
-	async register(email: string, password: string) {
+	async register(email: string, password: string, username: string) {
 		console.log("auth-service: register");
 
 		const hashed_password = await bcrypt.hash(password, 10);
@@ -40,6 +40,7 @@ export class AuthService {
 				data: {
 					email: email,
 					password: hashed_password,
+					username: username,
 				}
 			});
 
