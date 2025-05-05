@@ -1,34 +1,53 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+	Controller,
+	Get,
+	Post,
+	Body,
+	Param,
+	Delete,
+	Put,
+	UseGuards,
+	Request,
+} from '@nestjs/common';
 import { TodosService } from './todos.service';
-import { CreateTodoDto } from './dto/create-todo.dto';
-import { UpdateTodoDto } from './dto/update-todo.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('todos')
+@UseGuards(JwtAuthGuard)
 export class TodosController {
-	constructor(private readonly todosService: TodosService) {}
+	constructor(private todosService: TodosService) {}
 
 	@Post()
-	create(@Body() createTodoDto: CreateTodoDto) {
-		return this.todosService.create(createTodoDto);
+	createTodo(@Body() body: { title: string }, @Request() req) {
+		return this.todosService.create_todo(body.title, req.user.userId);
 	}
 
 	@Get()
-	findAll() {
-		return this.todosService.findAll();
+	getTodos(@Request() req) {
+		return this.todosService.get_todos(req.user.userId);
 	}
 
 	@Get(':id')
-	findOne(@Param('id') id: string) {
-		return this.todosService.findOne(+id);
+	getTodo(@Param('id') id: string, @Request() req) {
+		return this.todosService.get_todo(id, req.user.userId);
 	}
 
-	@Patch(':id')
-	update(@Param('id') id: string, @Body() updateTodoDto: UpdateTodoDto) {
-		return this.todosService.update(+id, updateTodoDto);
+	@Put(':id')
+	updateTodo(@Param('id') id: string,
+		@Body() body: { title?: string; done?: boolean },
+		@Request() req)
+	{
+			return this.todosService.update_todo(
+				id,
+				body.title,
+				body.done,
+				req.user.userId,
+			);
 	}
 
 	@Delete(':id')
-	remove(@Param('id') id: string) {
-		return this.todosService.remove(+id);
+	deleteTodo(@Param('id') id: string, @Request() req) {
+		return this.todosService.delete_todo(id, req.user.userId);
 	}
+
 }
