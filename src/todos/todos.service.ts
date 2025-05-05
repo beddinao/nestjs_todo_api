@@ -8,7 +8,6 @@ export class TodosService {
 	constructor(private prisma: PrismaService) {}
 
 	async create_todo(title: string, userId: number) {
-		console.log("todos-service: create_todo: title: ", title, ", userId: ", userId);
 		return this.prisma.todo.create({
 			data: {
 				title,
@@ -18,12 +17,10 @@ export class TodosService {
 	}
 		
 	async get_todos(userId: number) {
-		console.log("todos-service: get_todos: user_id: ", userId);
 		return this.prisma.todo.findMany({ where: { userId } });
 	}
 
 	async get_todo(id: string, userId: number) {
-		console.log("todos-service: get_todo: id: ", id, "userId: ", userId);
 		const todo = await this.prisma.todo.findFirst({ where: { id, userId } });
 		if (!todo)
 			throw new NotFoundException('no todo with that id fuck off');
@@ -31,7 +28,6 @@ export class TodosService {
 	}
 
 	async update_todo(id: string, title: string|undefined, done: boolean|undefined, userId: number) {
-		console.log("todos-service: update_todo: id: ", id, ", title: ", title, ", done: ", done, ", userId: ", userId);
 		const todo = await this.prisma.todo.findFirst({ where: { id, userId } });
 		if (!todo)
 			throw new NotFoundException('no todo with that id fuck off');
@@ -45,7 +41,6 @@ export class TodosService {
 	}
 
 	async delete_todo(id: string, userId: number) {
-		console.log("todos--service: delete_todo: id: ", id, ", userId: ", userId);
 		const todo = await this.prisma.todo.findFirst({ where: { id, userId } });
 		if (!todo)
 			throw new NotFoundException('no todo with that id fuck off');

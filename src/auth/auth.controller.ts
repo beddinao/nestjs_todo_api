@@ -7,7 +7,6 @@ export class AuthController {
 
 	@Post('login')
 	async login(@Body() body: { email: string; password: string }) {
-		console.log("\nauth-controller: login");
 
 		if (body == undefined)
 			throw new BadRequestException("invalid request body");
@@ -18,8 +17,7 @@ export class AuthController {
 	}
 
 	@Post('register')
-	register(@Body() body: { email: string; password: string, username: string }) {
-		console.log("\nauth-controller: register");
+	async register(@Body() body: { email: string; password: string, username: string }) {
 
 		if (body == undefined)
 			throw new BadRequestException("invalid request body");
@@ -35,5 +33,16 @@ export class AuthController {
 			throw new BadRequestException("invalid username, must be > 3 & < 15");
 
 		return this.authService.register(body.email, body.password, body.username);
+	}
+
+	@Post('refresh')
+	async refresh(@Body() body: { refresh_token: string }) {
+
+		if (body == undefined)
+			throw new BadRequestException("invalid request body");
+		if (!body.refresh_token)
+			throw new BadRequestException("no refresh token given");
+
+		return this.authService.refresh_token(body.refresh_token);
 	}
 }
