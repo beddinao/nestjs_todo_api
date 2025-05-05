@@ -20,6 +20,7 @@ export class AuthService {
 	}
 
 	async login(email: string, password: string) {
+		console.log("auth-service: login");
 		const user = await this.validate_user(email, password);
 		if (!user)
 			throw new UnauthorizedException('invalid credientials');
@@ -30,6 +31,8 @@ export class AuthService {
 	}
 
 	async register(email: string, password: string) {
+		console.log("auth-service: register");
+
 		const hashed_password = await bcrypt.hash(password, 10);
 
 		try {
