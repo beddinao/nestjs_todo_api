@@ -29,11 +29,6 @@ DIRECT_URL="your_direct_url"
 JWT_SECRET="your_random_secret_key"
 ```
 
-- run database (Docker):
-```bash
-docker-compose up -d
-```
-
 - start server:
 ```bash
 npm run start:dev
