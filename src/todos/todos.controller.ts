@@ -25,7 +25,11 @@ export class TodosController {
 
   @Post()
   createTodo(@Body() body: { title: string }, @Request() req) {
-    if (body == undefined || body.title == undefined)
+    if (
+      body == undefined ||
+      body.title == undefined ||
+      typeof body.title != 'string'
+    )
       throw new BadRequestException('need title to create a todo');
     return this.todosService.create_todo(body.title, req.user.userId);
   }
@@ -49,6 +53,11 @@ export class TodosController {
       (body.done == undefined && body.title == undefined)
     )
       throw new BadRequestException('invalid post request');
+    if (
+      (body.title && typeof body.title != 'string') ||
+      (body.done && typeof body.done != 'boolean')
+    )
+      throw new BadRequestException('invalid type for title or done');
     return this.todosService.update_todo(
       id,
       body.title,
