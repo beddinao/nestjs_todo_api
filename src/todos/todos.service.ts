@@ -16,6 +16,12 @@ export class TodosService {
       throw new BadRequestException(
         `invalid title: \'${title}\', only [a-z] or [A-Z] characters`,
       );
+
+    let if_todo = await this.prisma.todo.findFirst({ where: { title, userId } });
+
+    if (if_todo)
+      throw new BadRequestException("a todo with that title already exits for that user");
+    
     return this.prisma.todo.create({
       data: {
         title,
