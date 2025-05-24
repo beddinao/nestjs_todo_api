@@ -23,10 +23,15 @@ export class UsersController {
   }
 
   @Get(':id')
-  get_user(@Param('id') id: number, @Request() req) {
+  get_user(@Param('id') id: string, @Request() req) {
     if (id == undefined)
       throw new BadRequestException('need id to select a user');
-    return this.usersService.get_user(id);
+    if (!/^\d+$/.test(id))
+      throw new BadRequestException('invalid id, only numbers');
+    let new_id = parseInt(id);
+    if (new_id == undefined || new_id == 0 || isNaN(new_id))
+      throw new BadRequestException('invalid user id');
+    return this.usersService.get_user(new_id);
   }
 
   @Put('update')
@@ -63,6 +68,8 @@ export class UsersController {
 
   @Delete('delete')
   delete_user(@Request() req) {
+    if (req.user.userId == undefined)
+      throw new BadRequestException('invalid user id');
     return this.usersService.delete_user(req.user.userId);
   }
 }
