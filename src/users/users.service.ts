@@ -1,66 +1,64 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class UsersService {
-	constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) {}
 
-	async get_users() {
-		return this.prisma.user.findMany();
-	}
+  async get_users() {
+    return this.prisma.user.findMany();
+  }
 
-	async get_user(id: number) {
+  async get_user(id: number) {
+    const user = this.prisma.user.findFirst({ where: { id } });
 
-		if (id == undefined)
-			throw new BadRequestException("invalid request");
+    if (!user)
+      throw new NotFoundException('user with id [' + id + '] not found');
 
-		const user = this.prisma.user.findFirst({ where: { id } });
+    return user;
+  }
 
-		if (!user)
-			throw new NotFoundException("user with id ["+id+"] not found");
+  async update_user(
+    id: number,
+    username: string | undefined,
+    password: string | undefined,
+    email: string | undefined,
+  ) {
+    if (id == undefined) throw new BadRequestException('invalid request');
 
-		return user;
-	}
+    const user = await this.prisma.user.findFirst({ where: { id } });
 
-	async update_user(id: number, username: string|undefined, password: string|undefined, email: string|undefined) {
+    if (!user) throw new NotFoundException('no user with that id');
 
-		if (id == undefined)
-			throw new BadRequestException('invalid request');
+    if (email) {
+      const email_regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!email_regex.test(email))
+        throw new BadRequestException('invalid email');
+    }
 
-		const user = await this.prisma.user.findFirst({ where: { id } });
-		
-		if (!user)
-			throw new NotFoundException("no user with that id");
+    return this.prisma.user.update({
+      where: { id },
+      data: {
+        password,
+        username,
+        email,
+      },
+    });
+  }
 
-		if (email) {
-			const email_regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-			if (!email_regex.test(email))
-				throw new BadRequestException("invalid email");
-		}
+  async delete_user(id: number) {
+    if (!id) throw new BadRequestException('invalid request');
 
-		return this.prisma.user.update({
-			where: { id },
-			data: {
-				password,
-				username,
-				email
-			}
-		});
-	}
+    const user = await this.prisma.user.findFirst({ where: { id } });
 
+    if (!user) throw new NotFoundException('no user with that id');
 
-	async delete_user(id: number) {
-		if (!id) 
-			throw new BadRequestException("invalid request");
-
-		const user = await this.prisma.user.findFirst({ where: { id } });
-
-		if (!user)
-			throw new NotFoundException("no user with that id");
-
-		return this.prisma.user.delete({
-			where: { id },
-		});
-	}
-
+    return this.prisma.user.delete({
+      where: { id },
+    });
+  }
 }
